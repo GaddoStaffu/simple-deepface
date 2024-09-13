@@ -2,7 +2,6 @@ from deepface import DeepFace
 import matplotlib.pyplot as plt
 import cv2
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Specify the input and output directories
 input_dir = 'input'
@@ -53,9 +52,6 @@ def process_image(index, image_file):
     except Exception as e:
         print(f"Error processing image {image_file}: {e}")
 
-# Use ThreadPoolExecutor for concurrent processing
-with ThreadPoolExecutor() as executor:
-    futures = [executor.submit(process_image, index, image_file) for index, image_file in enumerate(image_files, start=1)]
-    for future in as_completed(futures):
-        # Optionally, you can handle the results or exceptions here
-        future.result()  # This will raise exceptions if any occurred in the thread
+# Process images sequentially
+for index, image_file in enumerate(image_files, start=1):
+    process_image(index, image_file)
